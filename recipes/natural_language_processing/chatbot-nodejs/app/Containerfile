@@ -1,0 +1,12 @@
+FROM registry.access.redhat.com/ubi8/nodejs-18-minimal:1-86
+USER 0
+COPY .env .
+COPY package.json .
+COPY package-lock.json .
+RUN npm install 
+COPY src src
+COPY public public
+RUN chown -R 1001 *
+USER 1001
+EXPOSE 8501
+ENTRYPOINT [ "npm", "start" ]

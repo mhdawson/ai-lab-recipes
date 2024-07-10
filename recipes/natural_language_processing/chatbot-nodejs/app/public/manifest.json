@@ -1,0 +1,8 @@
+{
+  "short_name": "node.js AI chatbot",
+  "name": "Node.js sample AI chatbot",
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}
