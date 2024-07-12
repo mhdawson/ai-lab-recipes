@@ -1,4 +1,4 @@
-FROM registry.access.redhat.com/ubi8/nodejs-18-minimal:1-86
+FROM registry.access.redhat.com/ubi8/nodejs-18-minimal:1-86 AS build
 USER 0
 COPY .env .
 COPY package.json .
@@ -6,7 +6,15 @@ COPY package-lock.json .
 RUN npm install 
 COPY src src
 COPY public public
-RUN chown -R 1001 *
+RUN npm run build
+
+FROM registry.access.redhat.com/ubi8/nginx-124
+
+USER 0
+COPY --from=build /opt/app-root/src/build /tmp/src
+RUN chown -R 1001:0 /tmp/src
 USER 1001
-EXPOSE 8501
-ENTRYPOINT [ "npm", "start" ]
+
+RUN /usr/libexec/s2i/assemble
+CMD /usr/libexec/s2i/run
+
